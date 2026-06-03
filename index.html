@@ -24,7 +24,7 @@
         /* Üst Başlık Alanı (Header) */
         header {
             background: linear-gradient(135deg, #1a1c23 0%, #0d0f12 100%);
-            padding: 30px 20px;
+            padding: 30px 20px 40px 20px;
             text-align: center;
             border-bottom: 2px solid #00ffcc;
             box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2);
@@ -47,7 +47,7 @@
             text-shadow: 0 0 8px rgba(255, 0, 85, 0.5);
         }
 
-        /* Sağ Üstteki Küçük İlan Ekle Butonu */
+        /* Tıklama Sorunu Çözülmüş İlan Ekle Butonu */
         .open-form-btn {
             position: absolute;
             right: 20px;
@@ -55,20 +55,20 @@
             background-color: #161920;
             color: #00ffcc;
             border: 2px solid #00ffcc;
-            padding: 8px 16px;
-            font-size: 0.9em;
+            padding: 10px 20px;
+            font-size: 1em;
             font-weight: bold;
             border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
             transition: all 0.2s ease;
-            z-index: 10;
+            z-index: 9999;
         }
 
         .open-form-btn:hover {
             background-color: #00ffcc;
             color: #0d0f12;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.7);
         }
 
         /* Arka Plan Karartması */
@@ -82,7 +82,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 10000;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
@@ -95,7 +95,7 @@
             pointer-events: auto;
         }
 
-        /* Form ve Detay Paneli */
+        /* Form ve Silme Paneli */
         .add-panel {
             background-color: #161920;
             border: 2px solid #00ffcc;
@@ -214,13 +214,13 @@
         .btn-danger {
             background-color: #ff0055;
             color: white;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         /* İlan Kartı Tasarımı */
         .container {
             max-width: 800px;
-            margin: 50px auto 30px;
+            margin: 60px auto 30px;
             padding: 0 20px;
         }
 
@@ -233,10 +233,13 @@
             overflow: hidden;
             transition: transform 0.2s, border-color 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .car-card.my-own-ad {
             cursor: pointer;
         }
 
-        .car-card:hover {
+        .car-card.my-own-ad:hover {
             transform: translateY(-3px);
             border-color: #00ffcc;
         }
@@ -306,77 +309,6 @@
             text-shadow: 0 0 5px rgba(0, 255, 204, 0.3);
         }
 
-        /* Instagram / TikTok Tarzı Mesajlaşma Odası */
-        .chat-room {
-            display: flex;
-            flex-direction: column;
-            height: 300px;
-            background: #0d0f12;
-            border-radius: 12px;
-            border: 1px solid #232836;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-
-        .chat-messages {
-            flex-grow: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .msg-bubble {
-            max-width: 75%;
-            padding: 10px 14px;
-            border-radius: 18px;
-            font-size: 0.95em;
-            word-wrap: break-word;
-            line-height: 1.4;
-        }
-
-        .msg-me {
-            background: #ff0055;
-            color: #fff;
-            align-self: flex-end;
-            border-bottom-right-radius: 3px;
-        }
-
-        .msg-them {
-            background: #232836;
-            color: #fff;
-            align-self: flex-start;
-            border-bottom-left-radius: 3px;
-        }
-
-        /* Yazıyor... Bildirimi Efekti */
-        .typing-indicator {
-            color: #a0aec0;
-            font-size: 0.85em;
-            font-style: italic;
-            padding-left: 5px;
-            display: none;
-        }
-
-        .chat-input-bar {
-            display: flex;
-            padding: 10px;
-            background: #161920;
-            border-top: 1px solid #232836;
-            gap: 10px;
-        }
-
-        .chat-send-btn {
-            background: #00ffcc;
-            color: #0d0f12;
-            border: none;
-            padding: 0 20px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
         /* Mobil Tasarım Ayarı */
         @media (max-width: 600px) {
             .car-card { flex-direction: column; }
@@ -384,7 +316,7 @@
             header h1 { font-size: 2.2em; }
             header h2 { font-size: 1.1em; }
             .type-group { gap: 15px; }
-            .open-form-btn { right: 10px; padding: 6px 12px; font-size: 0.8em; }
+            .open-form-btn { right: 10px; padding: 8px 16px; font-size: 0.9em; bottom: -22px; }
         }
     </style>
 </head>
@@ -421,25 +353,13 @@
         </div>
     </div>
 
-    <!-- 2. MODAL: DETAYLAR VE SOHBET PENCERESİ -->
-    <div class="modal-overlay" id="detailModal" onclick="closeModalOutside(event, 'detailModal')">
-        <div class="add-panel" style="max-width: 500px; width:95%;">
-            <button class="close-modal-btn" onclick="closeModal('detailModal')">✕</button>
-            <h3 id="dtTitle">Araç Detayı</h3>
-            <p id="dtOwner" style="color: #a0aec0; text-align: center; margin:-10px 0 15px 0; font-size:0.95em;"></p>
-
-            <!-- Instagram / TikTok Tarzı Akıllı Sohbet Kutusu -->
-            <div id="chatRoomArea" class="chat-room">
-                <div class="chat-messages" id="chatMessages"></div>
-                <div class="typing-indicator" id="typingIndicator">Ahmet yazıyor...</div>
-                <div class="chat-input-bar">
-                    <input type="text" id="chatInput" class="input-field" placeholder="Mesaj yaz..." style="margin-bottom:0;" onkeypress="checkEnter(event)">
-                    <button class="chat-send-btn" onclick="sendChat()">Gönder</button>
-                </div>
-            </div>
-
-            <!-- Sadece Senin Eklediğin İlanlarda Görünür -->
-            <button id="deleteAdBtn" class="submit-btn btn-danger" onclick="deleteCurrentAd()">İlanı Sil</button>
+    <!-- 2. MODAL: SADECE KENDİ İLANINI SİLME PENCERESİ -->
+    <div class="modal-overlay" id="deleteModal" onclick="closeModalOutside(event, 'deleteModal')">
+        <div class="add-panel" style="max-width: 400px; width:90%;">
+            <button class="close-modal-btn" onclick="closeModal('deleteModal')">✕</button>
+            <h3 id="dtTitle" style="margin-bottom: 25px;">İlan Yönetimi</h3>
+            
+            <button class="submit-btn btn-danger" onclick="deleteCurrentAd()">Bu İlanı Sil</button>
         </div>
     </div>
 
@@ -447,10 +367,10 @@
     <div class="container" id="adContainer"></div>
 
     <script>
-        // Sitenin Sahibi Sensin
-        const MY_NAME = "Yakup";
+        // Gizli sistem işareti (Arayüzde gözükmez)
+        const MY_SECRET_KEY = "mine";
 
-        // Orijinal İlanlar (Sahibi Ahmet olanlar - Mesajlaşma tetiklenir)
+        // Orijinal İlanlar (Silinemez ve tıklanamaz)
         const initialAds = [
             { id: 1, owner: "Ahmet", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
             { id: 2, owner: "Ahmet", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
@@ -460,7 +380,6 @@
         ];
 
         let ads = JSON.parse(localStorage.getItem('otoborsa_ads')) || [...initialAds];
-        let chatData = JSON.parse(localStorage.getItem('otoborsa_chats')) || {};
         let selectedImageBase64 = "";
         let activeAdId = null;
 
@@ -468,7 +387,7 @@
             renderAds();
         };
 
-        // İlan Çizim Motoru
+        // İlan Listesi Oluşturucu
         function renderAds() {
             localStorage.setItem('otoborsa_ads', JSON.stringify(ads));
             const container = document.getElementById('adContainer');
@@ -482,8 +401,13 @@
                      </div>` : 
                     `<span class="status-badge status-takas">Takaslık</span>`;
 
+                // Sadece bizim eklediğimiz ilanlar tıklanabilir olur
+                let isMyAd = ad.owner === MY_SECRET_KEY;
+                let clickAttr = isMyAd ? `onclick="openDeleteModal(${ad.id})"` : '';
+                let myAdClass = isMyAd ? 'my-own-ad' : '';
+
                 container.innerHTML += `
-                    <div class="car-card" onclick="openDetailModal(${ad.id})">
+                    <div class="car-card ${myAdClass}" ${clickAttr}>
                         <div class="car-image">
                             <img src="${ad.img}" alt="${ad.title}">
                         </div>
@@ -491,7 +415,7 @@
                             <div>
                                 <p class="car-title">${ad.title}</p>
                                 <div class="car-info-row">
-                                    <span>Sahibi: ${ad.owner}</span>
+                                    <span>Sahibi: ${isMyAd ? "Ben" : ad.owner}</span>
                                     <span>Oyun: CPM</span>
                                 </div>
                             </div>
@@ -505,7 +429,7 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active'); 
-            if(id === 'detailModal') activeAdId = null;
+            if(id === 'deleteModal') activeAdId = null;
         }
         function closeModalOutside(e, id) { if (e.target.id === id) { closeModal(id); } }
 
@@ -528,7 +452,7 @@
             }
         }
 
-        // Güvenli İlan Ekleme
+        // Yeni İlan Ekleme Motoru
         function addNewAd() {
             const carName = document.getElementById('carNameInput').value.trim();
             const carType = document.querySelector('input[name="carType"]:checked').value;
@@ -543,7 +467,7 @@
 
             ads.unshift({
                 id: Date.now(),
-                owner: MY_NAME,
+                owner: MY_SECRET_KEY, // Gizli anahtar atanır
                 title: carName,
                 type: carType,
                 price: carType === "Satılık" ? parseInt(priceValue) : 0,
@@ -564,25 +488,31 @@
             alert("✅ Başarıyla Eklendi");
         }
 
-        // Akıllı Detay / Mesaj Ekranı Açılışı
-        function openDetailModal(id) {
+        // Silme Penceresini Açma
+        function openDeleteModal(id) {
             activeAdId = id;
             const ad = ads.find(a => a.id == id);
+            if(ad && ad.owner === MY_SECRET_KEY) {
+                document.getElementById('dtTitle').innerText = ad.title;
+                openModal('deleteModal');
+            }
+        }
 
-            document.getElementById('dtTitle').innerText = ad.title;
-            document.getElementById('dtOwner').innerText = "İlan Sahibi: " + ad.owner;
+        // Güvenli Silme Fonksiyonu
+        function deleteCurrentAd() {
+            const ad = ads.find(a => a.id == activeAdId);
 
-            const deleteBtn = document.getElementById('deleteAdBtn');
-            const chatRoom = document.getElementById('chatRoomArea');
-            document.getElementById('typingIndicator').style.display = "none";
-            
-            if (ad.owner === MY_NAME) {
-                deleteBtn.style.display = 'block';
-                chatRoom.style.display = 'none';
-            } else {
-                deleteBtn.style.display = 'none';
-                chatRoom.style.display = 'flex';
-                loadChats();
+            if(!ad || ad.owner !== MY_SECRET_KEY) {
+                alert("❌ Hata: Bu ilan size ait olmadığı için silemezsiniz!");
+                return;
             }
 
+            ads = ads.filter(a => a.id !== activeAdId);
+            renderAds();
+            closeModal('deleteModal');
+            alert("🗑️ İlan kaldırıldı.");
+        }
+    </script>
+</body>
+                    </html>
     
