@@ -3,91 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTOBORSA - CPM Araç Pazarı</title>
+    <title>OTOBORSA - İlan Ekle</title>
     <style>
-        body { background-color: #0d0f12; color: #ffffff; font-family: sans-serif; margin: 0; padding: 0; }
-        header { background: #1a1c23; padding: 20px; text-align: center; border-bottom: 2px solid #00ffcc; }
-        .open-btn { background: #00ffcc; color: #0d0f12; border: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        /* Modal Stilleri */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-        .modal.show { display: flex; }
-        .panel { background: #161920; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid #00ffcc; }
-        .input-field { width: 100%; padding: 12px; margin: 8px 0; background: #232836; border: 1px solid #00ffcc; color: white; border-radius: 5px; box-sizing: border-box; }
-        .btn-submit { width: 100%; padding: 12px; background: #00ffcc; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .car-card { background: #161920; border: 1px solid #232836; margin: 15px auto; max-width: 500px; border-radius: 10px; overflow: hidden; display: flex; }
-        .car-image { width: 150px; height: 100px; background: #232836; }
-        .car-image img { width: 100%; height: 100%; object-fit: cover; }
-        .details { padding: 10px; flex-grow: 1; }
-        .btn-del { background: #ff0055; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+        body { background: #0d0f12; color: #fff; font-family: Arial; margin: 0; padding: 20px; }
+        .form-area { background: #161920; padding: 20px; border-radius: 10px; border: 1px solid #00ffcc; max-width: 400px; margin: 0 auto 20px; }
+        input { width: 100%; padding: 10px; margin: 5px 0; background: #232836; border: 1px solid #00ffcc; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #00ffcc; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .ad { background: #161920; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .ad img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>OTOBORSA</h1>
-    <button class="open-btn" onclick="document.getElementById('modal').classList.add('show')">+ İlan Ekle</button>
-</header>
-
-<div class="modal" id="modal">
-    <div class="panel">
-        <h3>Yeni İlan Oluştur</h3>
-        <input type="file" id="imgIn" class="input-field" accept="image/*">
-        <input type="text" id="ownerIn" class="input-field" placeholder="Adınız">
-        <input type="text" id="carIn" class="input-field" placeholder="Araba Modeli">
-        <input type="number" id="priceIn" class="input-field" placeholder="Fiyat (TL)">
-        <button class="btn-submit" onclick="addAd()">İLANIMI EKLE</button>
-        <button class="btn-submit" style="background:#555" onclick="document.getElementById('modal').classList.remove('show')">KAPAT</button>
+    <div class="form-area">
+        <h3>İlan Ekle</h3>
+        <input type="file" id="f" accept="image/*">
+        <input type="text" id="o" placeholder="Sahibi">
+        <input type="text" id="t" placeholder="Araba Modeli">
+        <input type="number" id="p" placeholder="Fiyat (TL)">
+        <button onclick="saveAd()">İLAN EKLE</button>
     </div>
-</div>
 
-<div id="adList"></div>
+    <div id="list"></div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
-    const db = getDatabase(initializeApp({ databaseURL: "https://comborse-76fee-default-rtdb.firebaseio.com/" }));
-    const adsRef = ref(db, 'ads');
-    let imgData = "";
+        const db = getDatabase(initializeApp({ databaseURL: "https://comborse-76fee-default-rtdb.firebaseio.com/" }));
+        const adsRef = ref(db, 'ads');
+        let img = "";
 
-    // Fotoğrafı yükle
-    document.getElementById('imgIn').onchange = (e) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => imgData = ev.target.result;
-        reader.readAsDataURL(e.target.files[0]);
-    };
+        document.getElementById('f').onchange = (e) => {
+            const r = new FileReader();
+            r.onload = (ev) => img = ev.target.result;
+            r.readAsDataURL(e.target.files[0]);
+        };
 
-    // İlan Ekle
-    window.addAd = () => {
-        if(!imgData || !document.getElementById('carIn').value) return alert("Fotoğraf ve model bilgisi zorunludur!");
-        push(adsRef, {
-            owner: document.getElementById('ownerIn').value,
-            title: document.getElementById('carIn').value,
-            price: document.getElementById('priceIn').value,
-            img: imgData
-        }).then(() => location.reload());
-    };
+        window.saveAd = () => {
+            if(!img || !document.getElementById('t').value) return alert("Resim ve model zorunlu!");
+            push(adsRef, {
+                o: document.getElementById('o').value,
+                t: document.getElementById('t').value,
+                p: document.getElementById('p').value,
+                img: img
+            }).then(() => location.reload());
+        };
 
-    // İlanları listele
-    onValue(adsRef, (snapshot) => {
-        const data = snapshot.val();
-        const list = document.getElementById('adList');
-        list.innerHTML = "";
-        if (data) {
-            Object.keys(data).forEach(key => {
-                const ad = data[key];
-                list.innerHTML += `
-                    <div class="car-card">
-                        <div class="car-image"><img src="${ad.img}"></div>
-                        <div class="details">
-                            <h3 style="margin:0">${ad.title}</h3>
-                            <p style="margin:5px 0">Sahibi: ${ad.owner} - ${ad.price} TL</p>
-                            <button class="btn-del" onclick="remove(ref(db, 'ads/${key}')).then(() => location.reload())">Sil</button>
+        onValue(adsRef, (snapshot) => {
+            const d = snapshot.val();
+            const l = document.getElementById('list');
+            l.innerHTML = "";
+            if(d) {
+                Object.keys(d).forEach(k => {
+                    l.innerHTML += `<div class="ad">
+                        <img src="${d[k].img}">
+                        <div>
+                            <h4>${d[k].t}</h4>
+                            <p>${d[k].p} TL</p>
+                            <button style="background:#ff0055; padding:5px" onclick="remove(ref(db, 'ads/${k}')).then(()=>location.reload())">Sil</button>
                         </div>
                     </div>`;
-            });
-        }
-    });
-</script>
+                });
+            }
+        });
+    </script>
 </body>
 </html>
