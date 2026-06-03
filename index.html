@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Google Search Console Doğrulama Kodu -->
     <meta name="google-site-verification" content="lxTEY-Gg1mmav7LYW_9Yox_suzIsB8JP3N5wTYwEozE" />
     
-    <!-- Google Arama Motoru Optimizasyonu (SEO) Ayarları -->
     <title>cpmborsa - OTOBORSA - CPM Araç Pazarı</title>
     <meta name="description" content="cpmborsa ile Car Parking Multiplayer (CPM) satılık ve takaslık araba ilanlarına göz atın. En tarz krom jant, çizimli araçlar ve güncel CPM araba piyasası!">
 
@@ -333,14 +331,12 @@
 </head>
 <body>
 
-    <!-- Üst Başlık -->
     <header>
         <h1>OTOBORSA</h1>
         <h2>CAR PARKING MULTIPLAYER SATILIK - TAKASLIK ARABALAR</h2>
         <button class="open-form-btn" onclick="openModal('formModal')">+ İlan Ekle</button>
     </header>
 
-    <!-- 1. MODAL: İLAN EKLEME PENCERESİ -->
     <div class="modal-overlay" id="formModal" onclick="closeModalOutside(event, 'formModal')">
         <div class="add-panel">
             <button class="close-modal-btn" onclick="closeModal('formModal')">✕</button>
@@ -368,7 +364,6 @@
         </div>
     </div>
 
-    <!-- 2. MODAL: SADECE KENDİ İLANINI SİLME PENCERESİ -->
     <div class="modal-overlay" id="deleteModal" onclick="closeModalOutside(event, 'deleteModal')">
         <div class="add-panel" style="max-width: 400px; width:90%;">
             <button class="close-modal-btn" onclick="closeModal('deleteModal')">✕</button>
@@ -378,15 +373,12 @@
         </div>
     </div>
 
-    <!-- İlan Listesi Container -->
     <div class="container" id="adContainer"></div>
 
-    <!-- CANLI VERİTABANI MOTORU (FIREBASE) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
-        // Senin gönderdiğin veritabanı adresi entegre edildi
         const firebaseConfig = {
             databaseURL: "https://comborse-76fee-default-rtdb.firebaseio.com/"
         };
@@ -400,7 +392,7 @@
         }
         const MY_TOKEN = localStorage.getItem('cpm_user_token');
 
-        // Orijinal Hazır İlanlar (Eğer veritabanı tamamen boşsa otomatik eklenir)
+        // Orijinal Hazır İlanlar (Veritabanı boşsa otomatik yüklenir)
         const initialAds = [
             { token: "system", owner: "Ahmet", social: "@ahmet_cpm", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
             { token: "system", owner: "Mehmet", social: "@mehmet_v8", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
@@ -409,22 +401,21 @@
             { token: "system", owner: "Efe", social: "@efe_i8", title: "Krom + Çizimli BMW i8", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/nwx796a.jpg" }
         ];
 
+        // Global Değişkenler (Dışarıdan erişim için window'a bağlandı)
         window.activeAdKey = null;
         window.selectedImageBase64 = "";
 
-        // Veritabanını Canlı Dinleme Modülü (Her telefonda anında yenilenir)
+        // Canlı Veri Dinleme
         onValue(adsRef, (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('adContainer');
             container.innerHTML = "";
 
-            // Eğer veritabanı tamamen sıfırsa ilk örnek ilanları yükle
             if (!data) {
                 initialAds.forEach(ad => push(adsRef, ad));
                 return;
             }
 
-            // Veritabanındaki tüm ilanları ters kronolojik sırayla ekrana bas
             Object.keys(data).reverse().forEach(key => {
                 const ad = data[key];
                 
@@ -435,7 +426,6 @@
                      </div>` : 
                     `<span class="status-badge status-takas">Takaslık</span>`;
 
-                // Token kontrolü: İlan bu telefondan mı yüklendi?
                 let isMyAd = ad.token === MY_TOKEN;
                 let clickAttr = isMyAd ? `onclick="openDeleteModal('${key}', '${ad.title.replace(/'/g, "\\'")}')"` : '';
                 let myAdClass = isMyAd ? 'my-own-ad' : '';
@@ -461,7 +451,7 @@
             });
         });
 
-        // Canlı Havuza İlan Gönderme Fonksiyonu
+        // Tıklama Sorunu Çözülmüş İlan Ekleme Fonksiyonu
         window.addNewAd = function() {
             const ownerName = document.getElementById('ownerNameInput').value.trim();
             const socialMedia = document.getElementById('socialInput').value.trim();
@@ -479,9 +469,8 @@
                 if (parseInt(priceValue) > 50000000) { alert("Fiyat sınırı aşıldı! En fazla 50.000.000 TL yazabilirsiniz."); return; }
             }
 
-            // Veritabanına yeni ilan paketini yolla
             push(adsRef, {
-                token: MY_TOKEN, // Bu ilanın sahibi bu tarayıcıdır kilidi
+                token: MY_TOKEN,
                 owner: ownerName,
                 social: socialMedia,
                 title: carName,
@@ -490,7 +479,6 @@
                 img: window.selectedImageBase64
             }).then(() => {
                 closeModal('formModal');
-                // Form Temizliği
                 document.getElementById('ownerNameInput').value = "";
                 document.getElementById('socialInput').value = "";
                 document.getElementById('carNameInput').value = "";
@@ -503,11 +491,11 @@
                 document.querySelector('input[name="carType"][value="Takaslık"]').checked = true;
                 alert("✅ İlanınız Canlı Pazara Eklendi!");
             }).catch((err) => {
-                alert("Veritabanı hatası: " + err.message);
+                alert("Hata: " + err.message);
             });
         }
 
-        // Canlı İlanı Silme Fonksiyonu
+        // İlan Silme Motoru
         window.deleteCurrentAd = function() {
             if (window.activeAdKey) {
                 const targetRef = ref(db, `ads/${window.activeAdKey}`);
@@ -519,7 +507,6 @@
         }
     </script>
 
-    <!-- KONTROL VE GÖRSEL YARDIMCI SCRIPTLER -->
     <script>
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { 
@@ -541,4 +528,18 @@
                 reader.onload = function(e) {
                     document.getElementById('fileLabel').style.backgroundImage = `url('${e.target.result}')`;
                     document.getElementById('uploadText').style.display = 'none';
-                  
+                    window.selectedImageBase64 = e.target.result; 
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openDeleteModal(key, title) {
+            window.activeAdKey = key;
+            document.getElementById('dtTitle').innerText = title;
+            openModal('deleteModal');
+        }
+    </script>
+</body>
+    </html>
+    
