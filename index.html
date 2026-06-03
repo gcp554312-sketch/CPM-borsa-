@@ -340,7 +340,7 @@
         <button class="open-form-btn" onclick="openModal('formModal')">+ İlan Ekle</button>
     </header>
 
-    <!-- 1. MODAL: İLAN EKLEME PENCERESİ (YENİ ALANLAR EKLENDİ) -->
+    <!-- 1. MODAL: İLAN EKLEME PENCERESİ -->
     <div class="modal-overlay" id="formModal" onclick="closeModalOutside(event, 'formModal')">
         <div class="add-panel">
             <button class="close-modal-btn" onclick="closeModal('formModal')">✕</button>
@@ -378,37 +378,56 @@
         </div>
     </div>
 
-    <!-- İlan Listesi -->
+    <!-- İlan Listesi Container -->
     <div class="container" id="adContainer"></div>
 
-    <script>
-        // Arka planda silme yetkisini doğrulamak için kullanılan anahtar
-        const IS_MY_POST = "true";
+    <!-- CANLI VERİTABANI MOTORU (FIREBASE) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
-        // Orijinal Hazır İlanlar (Tıklanamaz ve silinemez olanlar)
+        // Senin gönderdiğin veritabanı adresi entegre edildi
+        const firebaseConfig = {
+            databaseURL: "https://comborse-76fee-default-rtdb.firebaseio.com/"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const adsRef = ref(db, 'ads');
+
+        // Tarayıcıya özel gizli kimlik (Kendi ilanını tanımak için)
+        if (!localStorage.getItem('cpm_user_token')) {
+            localStorage.setItem('cpm_user_token', 'user_' + Date.now() + Math.random().toString(36).substr(2, 5));
+        }
+        const MY_TOKEN = localStorage.getItem('cpm_user_token');
+
+        // Orijinal Hazır İlanlar (Eğer veritabanı tamamen boşsa otomatik eklenir)
         const initialAds = [
-            { id: 1, isMine: "false", owner: "Ahmet", social: "@ahmet_cpm", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
-            { id: 2, isMine: "false", owner: "Mehmet", social: "@mehmet_v8", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
-            { id: 3, isMine: "false", owner: "Can", social: "@can_kartal", title: "Krom Jant Kartal", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/2zzzaoi.jpg" },
-            { id: 4, isMine: "false", owner: "Arda", social: "@arda_dodge", title: "Pikap Dodge Jeep", type: "Satılık", price: 1000000, img: "https://i.hizliresim.com/pum61p1.jpg" },
-            { id: 5, isMine: "false", owner: "Efe", social: "@efe_i8", title: "Krom + Çizimli BMW i8", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/nwx796a.jpg" }
+            { token: "system", owner: "Ahmet", social: "@ahmet_cpm", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
+            { token: "system", owner: "Mehmet", social: "@mehmet_v8", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
+            { token: "system", owner: "Can", social: "@can_kartal", title: "Krom Jant Kartal", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/2zzzaoi.jpg" },
+            { token: "system", owner: "Arda", social: "@arda_dodge", title: "Pikap Dodge Jeep", type: "Satılık", price: 1000000, img: "https://i.hizliresim.com/pum61p1.jpg" },
+            { token: "system", owner: "Efe", social: "@efe_i8", title: "Krom + Çizimli BMW i8", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/nwx796a.jpg" }
         ];
 
-        let ads = JSON.parse(localStorage.getItem('otoborsa_ads')) || [...initialAds];
-        let selectedImageBase64 = "";
-        let activeAdId = null;
+        window.activeAdKey = null;
+        window.selectedImageBase64 = "";
 
-        window.onload = function() {
-            renderAds();
-        };
-
-        // İlan Listesi Çizici
-        function renderAds() {
-            localStorage.setItem('otoborsa_ads', JSON.stringify(ads));
+        // Veritabanını Canlı Dinleme Modülü (Her telefonda anında yenilenir)
+        onValue(adsRef, (snapshot) => {
+            const data = snapshot.val();
             const container = document.getElementById('adContainer');
             container.innerHTML = "";
 
-            ads.forEach(ad => {
+            // Eğer veritabanı tamamen sıfırsa ilk örnek ilanları yükle
+            if (!data) {
+                initialAds.forEach(ad => push(adsRef, ad));
+                return;
+            }
+
+            // Veritabanındaki tüm ilanları ters kronolojik sırayla ekrana bas
+            Object.keys(data).reverse().forEach(key => {
+                const ad = data[key];
+                
                 let badgeHTML = ad.type === "Satılık" ? 
                     `<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
                         <span class="status-badge status-satilik">Satılık</span>
@@ -416,9 +435,9 @@
                      </div>` : 
                     `<span class="status-badge status-takas">Takaslık</span>`;
 
-                // Sadece bizim eklediğimiz ilanlar tıklanabilir silme modunu tetikler
-                let isMyAd = ad.isMine === IS_MY_POST;
-                let clickAttr = isMyAd ? `onclick="openDeleteModal(${ad.id})"` : '';
+                // Token kontrolü: İlan bu telefondan mı yüklendi?
+                let isMyAd = ad.token === MY_TOKEN;
+                let clickAttr = isMyAd ? `onclick="openDeleteModal('${key}', '${ad.title.replace(/'/g, "\\'")}')"` : '';
                 let myAdClass = isMyAd ? 'my-own-ad' : '';
 
                 container.innerHTML += `
@@ -440,12 +459,72 @@
                     </div>
                 `;
             });
+        });
+
+        // Canlı Havuza İlan Gönderme Fonksiyonu
+        window.addNewAd = function() {
+            const ownerName = document.getElementById('ownerNameInput').value.trim();
+            const socialMedia = document.getElementById('socialInput').value.trim();
+            const carName = document.getElementById('carNameInput').value.trim();
+            const carType = document.querySelector('input[name="carType"]:checked').value;
+            const priceValue = document.getElementById('priceInput').value.trim();
+
+            if (!window.selectedImageBase64) { alert("Lütfen bir araba fotoğrafı ekleyin!"); return; }
+            if (ownerName === "") { alert("Lütfen adınızı yazın!"); return; }
+            if (socialMedia === "") { alert("Lütfen Instagram veya TikTok kullanıcı adınızı yazın!"); return; }
+            if (carName === "") { alert("Lütfen araba adını yazın!"); return; }
+            
+            if (carType === "Satılık") {
+                if (priceValue === "") { alert("Lütfen bir satış fiyatı girin!"); return; }
+                if (parseInt(priceValue) > 50000000) { alert("Fiyat sınırı aşıldı! En fazla 50.000.000 TL yazabilirsiniz."); return; }
+            }
+
+            // Veritabanına yeni ilan paketini yolla
+            push(adsRef, {
+                token: MY_TOKEN, // Bu ilanın sahibi bu tarayıcıdır kilidi
+                owner: ownerName,
+                social: socialMedia,
+                title: carName,
+                type: carType,
+                price: carType === "Satılık" ? parseInt(priceValue) : 0,
+                img: window.selectedImageBase64
+            }).then(() => {
+                closeModal('formModal');
+                // Form Temizliği
+                document.getElementById('ownerNameInput').value = "";
+                document.getElementById('socialInput').value = "";
+                document.getElementById('carNameInput').value = "";
+                document.getElementById('priceInput').value = "";
+                document.getElementById('photoInput').value = "";
+                document.getElementById('fileLabel').style.backgroundImage = "none";
+                document.getElementById('uploadText').style.display = 'block';
+                window.selectedImageBase64 = "";
+                togglePriceField(false);
+                document.querySelector('input[name="carType"][value="Takaslık"]').checked = true;
+                alert("✅ İlanınız Canlı Pazara Eklendi!");
+            }).catch((err) => {
+                alert("Veritabanı hatası: " + err.message);
+            });
         }
 
+        // Canlı İlanı Silme Fonksiyonu
+        window.deleteCurrentAd = function() {
+            if (window.activeAdKey) {
+                const targetRef = ref(db, `ads/${window.activeAdKey}`);
+                remove(targetRef).then(() => {
+                    closeModal('deleteModal');
+                    alert("🗑️ İlan başarıyla canlı pazardan kaldırıldı.");
+                });
+            }
+        }
+    </script>
+
+    <!-- KONTROL VE GÖRSEL YARDIMCI SCRIPTLER -->
+    <script>
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { 
             document.getElementById(id).classList.remove('active'); 
-            if(id === 'deleteModal') activeAdId = null;
+            if(id === 'deleteModal') window.activeAdKey = null;
         }
         function closeModalOutside(e, id) { if (e.target.id === id) { closeModal(id); } }
 
@@ -462,83 +541,4 @@
                 reader.onload = function(e) {
                     document.getElementById('fileLabel').style.backgroundImage = `url('${e.target.result}')`;
                     document.getElementById('uploadText').style.display = 'none';
-                    selectedImageBase64 = e.target.result; 
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Yeni İlan Ekleme (Geliştirilmiş Doğrulama)
-        function addNewAd() {
-            const ownerName = document.getElementById('ownerNameInput').value.trim();
-            const socialMedia = document.getElementById('socialInput').value.trim();
-            const carName = document.getElementById('carNameInput').value.trim();
-            const carType = document.querySelector('input[name="carType"]:checked').value;
-            const priceValue = document.getElementById('priceInput').value.trim();
-
-            if (!selectedImageBase64) { alert("Lütfen bir araba fotoğrafı ekleyin!"); return; }
-            if (ownerName === "") { alert("Lütfen adınızı yazın!"); return; }
-            if (socialMedia === "") { alert("Lütfen Instagram veya TikTok kullanıcı adınızı yazın!"); return; }
-            if (carName === "") { alert("Lütfen araba adını yazın!"); return; }
-            
-            if (carType === "Satılık") {
-                if (priceValue === "") { alert("Lütfen bir satış fiyatı girin!"); return; }
-                if (parseInt(priceValue) > 50000000) { alert("Fiyat sınırı aşıldı! En fazla 50.000.000 TL yazabilirsiniz."); return; }
-            }
-
-            ads.unshift({
-                id: Date.now(),
-                isMine: IS_MY_POST, // Bizim eklediğimizi işaretler
-                owner: ownerName,
-                social: socialMedia,
-                title: carName,
-                type: carType,
-                price: carType === "Satılık" ? parseInt(priceValue) : 0,
-                img: selectedImageBase64
-            });
-
-            renderAds();
-            closeModal('formModal');
-
-            // Form Alanlarını Temizleme
-            document.getElementById('ownerNameInput').value = "";
-            document.getElementById('socialInput').value = "";
-            document.getElementById('carNameInput').value = "";
-            document.getElementById('priceInput').value = "";
-            document.getElementById('photoInput').value = "";
-            document.getElementById('fileLabel').style.backgroundImage = "none";
-            document.getElementById('uploadText').style.display = 'block';
-            selectedImageBase64 = "";
-            togglePriceField(false);
-            document.querySelector('input[name="carType"][value="Takaslık"]').checked = true;
-            alert("✅ İlanınız Başarıyla Eklendi");
-        }
-
-        // Silme Penceresini Açma Kontrolü
-        function openDeleteModal(id) {
-            activeAdId = id;
-            const ad = ads.find(a => a.id == id);
-            if(ad && ad.isMine === IS_MY_POST) {
-                document.getElementById('dtTitle').innerText = ad.title;
-                openModal('deleteModal');
-            }
-        }
-
-        // Kendi İlanını Silme İşlemi
-        function deleteCurrentAd() {
-            const ad = ads.find(a => a.id == activeAdId);
-
-            if(!ad || ad.isMine !== IS_MY_POST) {
-                alert("❌ Hata: Bu ilan size ait olmadığı için silemezsiniz!");
-                return;
-            }
-
-            ads = ads.filter(a => a.id !== activeAdId);
-            renderAds();
-            closeModal('deleteModal');
-            alert("🗑️ İlan başarıyla kaldırıldı.");
-        }
-    </script>
-</body>
-            </html>
-                    
+                  
