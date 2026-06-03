@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Google Search Console Doğrulama Kodu -->
     <meta name="google-site-verification" content="lxTEY-Gg1mmav7LYW_9Yox_suzIsB8JP3N5wTYwEozE" />
     
-    <!-- Google Arama Motoru Optimizasyonu (SEO) Ayarları -->
     <title>cpmborsa - OTOBORSA - CPM Araç Pazarı</title>
     <meta name="description" content="cpmborsa ile Car Parking Multiplayer (CPM) satılık ve takaslık araba ilanlarına göz atın. En tarz krom jant, çizimli araçlar ve güncel CPM araba piyasası!">
 
@@ -24,7 +22,7 @@
         /* Üst Başlık Alanı (Header) */
         header {
             background: linear-gradient(135deg, #1a1c23 0%, #0d0f12 100%);
-            padding: 30px 20px;
+            padding: 30px 20px 45px 20px; /* Alttaki çizgi ve buton için ekstra alan */
             text-align: center;
             border-bottom: 2px solid #00ffcc;
             box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2);
@@ -47,18 +45,18 @@
             text-shadow: 0 0 8px rgba(255, 0, 85, 0.5);
         }
 
-        /* Sağ Üst Köşedeki Küçük İlan Ekle Butonu */
+        /* Tam Çizdiğin Yere (Çizginin Üstüne ve Sağ Tarafa) Gelecek Buton */
         .open-form-btn {
             position: absolute;
-            right: 20px;
-            bottom: -20px; /* Çizginin hemen altına hizalanması için */
+            right: 25px;
+            bottom: 8px; /* Tam olarak o yeşil çizginin üzerine oturması için */
             background-color: #161920;
             color: #00ffcc;
             border: 2px solid #00ffcc;
-            padding: 8px 16px;
-            font-size: 0.9em;
+            padding: 10px 24px;
+            font-size: 1.1em;
             font-weight: bold;
-            border-radius: 20px;
+            border-radius: 30px; /* Yuvarlak, oval buton yapısı */
             cursor: pointer;
             box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
             transition: all 0.2s ease;
@@ -78,7 +76,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -96,7 +94,7 @@
             pointer-events: auto;
         }
 
-        /* Ekran Görüntüsündeki Birebir Form Kutusu */
+        /* İlan Ekleme Form Kutusu */
         .add-panel {
             background-color: #161920;
             border: 2px solid #00ffcc;
@@ -224,11 +222,11 @@
         /* İlan Listesi Konteyneri */
         .container {
             max-width: 800px;
-            margin: 50px auto 30px; /* Buton taşmasından dolayı üst marjı biraz artırdık */
+            margin: 40px auto 30px;
             padding: 0 20px;
         }
 
-        /* Sahibinden Tarzı Alt Alta Kart Yapısı */
+        /* Kart Yapısı */
         .car-card {
             background-color: #161920;
             border: 1px solid #232836;
@@ -283,7 +281,7 @@
             color: #a0aec0;
         }
 
-        /* Durum Etiketleri (Takaslık / Satılık) */
+        /* Durum Etiketleri */
         .status-badge {
             display: inline-block;
             padding: 6px 12px;
@@ -313,8 +311,17 @@
             text-shadow: 0 0 5px rgba(0, 255, 204, 0.3);
         }
 
-        /* Mobil Uyumluluk */
+        /* Mobil Uyumluluk Ayarları */
         @media (max-width: 600px) {
+            header {
+                padding: 25px 15px 55px 15px; /* Mobilde butonun taşmaması için alt boşluk artırıldı */
+            }
+            .open-form-btn {
+                right: 15px;
+                bottom: 8px;
+                padding: 8px 18px;
+                font-size: 0.95em;
+            }
             .car-card {
                 flex-direction: column;
             }
@@ -328,43 +335,29 @@
             header h2 {
                 font-size: 1.1em;
             }
-            .type-group {
-                gap: 15px;
-            }
-            .open-form-btn {
-                right: 10px;
-                padding: 6px 12px;
-                font-size: 0.8em;
-            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Üst Başlık -->
     <header>
         <h1>OTOBORSA</h1>
         <h2>CAR PARKING MULTIPLAYER SATILIK - TAKASLIK ARABALAR</h2>
-        <!-- Sağ Üstteki Küçük Buton -->
         <button class="open-form-btn" onclick="openModal()">+ İlan Ekle</button>
     </header>
 
-    <!-- AÇILIR PENCERE (MODAL SCREEN) -->
     <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
         <div class="add-panel">
             <button class="close-modal-btn" onclick="closeModal()">✕</button>
             <h3>+ Sende İlan Ekle</h3>
             
-            <!-- Dikdörtgen Fotoğraf Alanı -->
             <label class="file-box" id="fileLabel" for="photoInput">
                 <span id="uploadText">📷 Fotoğraf Seç (Galeri / Dosyalar)</span>
                 <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewImage(this)">
             </label>
 
-            <!-- Araba İsmi -->
             <input type="text" id="carNameInput" class="input-field" placeholder="Araba Adı Ne Olsun?">
 
-            <!-- Takaslık / Satılık Seçim Kutuları -->
             <div class="type-group">
                 <label>
                     <input type="radio" name="carType" value="Takaslık" checked onclick="togglePriceField(false)"> Takaslık
@@ -374,18 +367,14 @@
                 </label>
             </div>
 
-            <!-- Fiyat Alanı (Gizli başlar, Max 50M) -->
             <input type="number" id="priceInput" class="input-field" placeholder="Fiyat Yaz (En fazla 50.000.000 TL)" max="50000000" style="display: none;">
 
-            <!-- Onayla Butonu -->
             <button class="submit-btn" onclick="addNewAd()">ONAYLA</button>
         </div>
     </div>
 
-    <!-- İlan Listesi -->
     <div class="container" id="adContainer">
 
-        <!-- 1. ARABA (TRANSIT) -->
         <div class="car-card">
             <div class="car-image">
                 <img src="https://i.hizliresim.com/8tiowo9.jpg" alt="Krom jant transit">
@@ -402,7 +391,6 @@
             </div>
         </div>
 
-        <!-- 2. ARABA (KARAVAN) -->
         <div class="car-card">
             <div class="car-image">
                 <img src="https://i.hizliresim.com/plb8pgp.jpg" alt="Karavan sirenli">
@@ -419,7 +407,6 @@
             </div>
         </div>
 
-        <!-- 3. ARABA (KARTAL) -->
         <div class="car-card">
             <div class="car-image">
                 <img src="https://i.hizliresim.com/2zzzaoi.jpg" alt="Krom jant kartal">
@@ -436,7 +423,6 @@
             </div>
         </div>
 
-        <!-- 4. ARABA (SATILIK JEEP) -->
         <div class="car-card">
             <div class="car-image">
                 <img src="https://i.hizliresim.com/pum61p1.jpg" alt="Pikap Dodge jeep">
@@ -456,7 +442,6 @@
             </div>
         </div>
 
-        <!-- 5. ARABA (BMW i8) -->
         <div class="car-card">
             <div class="car-image">
                 <img src="https://i.hizliresim.com/nwx796a.jpg" alt="Krom + çizimli BMW i8">
@@ -475,11 +460,9 @@
 
     </div>
 
-    <!-- SİTE FONKSİYONLARI (JAVASCRIPT) -->
     <script>
         let selectedImageBase64 = "";
 
-        // Modal pencerelerini açma/kapama fonksiyonları
         function openModal() {
             document.getElementById('modalOverlay').classList.add('active');
         }
@@ -494,7 +477,6 @@
             }
         }
 
-        // Satılık seçilince fiyat kutusunu açma/kapama fonksiyonu
         function togglePriceField(show) {
             const priceInput = document.getElementById('priceInput');
             if (show) {
@@ -505,7 +487,6 @@
             }
         }
 
-        // Seçilen resmi dikdörtgen kutunun içinde önizleme fonksiyonu
         function previewImage(input) {
             const file = input.files[0];
             if (file) {
@@ -520,14 +501,12 @@
             }
         }
 
-        // Yeni İlanı Kontrol Edip Listeye Ekleme Fonksiyonu
         function addNewAd() {
             const carName = document.getElementById('carNameInput').value.trim();
             const carType = document.querySelector('input[name="carType"]:checked').value;
             const priceInput = document.getElementById('priceInput');
             const priceValue = priceInput.value.trim();
 
-            // Form Kontrolleri
             if (!selectedImageBase64) {
                 alert("Lütfen bir araba fotoğrafı ekleyin!");
                 return;
@@ -547,13 +526,11 @@
                 }
             }
 
-            // Sayı Formatlama
             let formattedPrice = "";
             if (carType === "Satılık") {
                 formattedPrice = Number(priceValue).toLocaleString('tr-TR') + " TL";
             }
 
-            // Yeni İlan Kartı HTML Yapısı
             const adContainer = document.getElementById('adContainer');
             const newCard = document.createElement('div');
             newCard.className = 'car-card';
@@ -584,14 +561,12 @@
                 </div>
             `;
 
-            // Yeni ilanı listenin EN ÜSTÜNE ekle
             adContainer.insertBefore(newCard, adContainer.firstChild);
 
-            // Başarılı Mesajı Ver ve Ekranı Kapat
             alert("✅ Başarıyla Eklendi");
             closeModal();
 
-            // Formu Temizle
+            // Form Sıfırlama
             document.getElementById('carNameInput').value = "";
             document.getElementById('priceInput').value = "";
             document.getElementById('photoInput').value = "";
@@ -605,5 +580,5 @@
     </script>
 
 </body>
-                        </html>
-                
+    </html>
+    
