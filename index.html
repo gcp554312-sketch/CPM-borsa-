@@ -3,334 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="google-site-verification" content="lxTEY-Gg1mmav7LYW_9Yox_suzIsB8JP3N5wTYwEozE" />
-    
     <title>cpmborsa - OTOBORSA - CPM Araç Pazarı</title>
-    <meta name="description" content="cpmborsa ile Car Parking Multiplayer (CPM) satılık ve takaslık araba ilanlarına göz atın. En tarz krom jant, çizimli araçlar ve güncel CPM araba piyasası!">
-
+    <meta name="description" content="cpmborsa ile Car Parking Multiplayer (CPM) satılık ve takaslık araba ilanlarına göz atın.">
     <style>
-        /* Genel Sayfa Ayarları (Koyu Tema) */
-        body {
-            background-color: #0d0f12;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Üst Başlık Alanı (Header) */
-        header {
-            background: linear-gradient(135deg, #1a1c23 0%, #0d0f12 100%);
-            padding: 30px 20px 40px 20px;
-            text-align: center;
-            border-bottom: 2px solid #00ffcc;
-            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2);
-            position: relative;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 3em;
-            letter-spacing: 3px;
-            color: #00ffcc;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
-        }
-
-        header h2 {
-            margin: 10px 0 0 0;
-            font-size: 1.4em;
-            color: #ff0055;
-            font-weight: 600;
-            text-shadow: 0 0 8px rgba(255, 0, 85, 0.5);
-        }
-
-        /* İlan Ekle Butonu */
-        .open-form-btn {
-            position: absolute;
-            right: 20px;
-            bottom: -20px;
-            background-color: #161920;
-            color: #00ffcc;
-            border: 2px solid #00ffcc;
-            padding: 10px 20px;
-            font-size: 1em;
-            font-weight: bold;
-            border-radius: 20px;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
-            transition: all 0.2s ease;
-            z-index: 9999;
-        }
-
-        .open-form-btn:hover {
-            background-color: #00ffcc;
-            color: #0d0f12;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.7);
-        }
-
-        /* Arka Plan Karartması */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Form ve Silme Paneli */
-        .add-panel {
-            background-color: #161920;
-            border: 2px solid #00ffcc;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 450px;
-            padding: 25px;
-            box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
-            position: relative;
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .add-panel {
-            transform: scale(1);
-        }
-
-        .add-panel h3 {
-            margin-top: 0;
-            color: #00ffcc;
-            font-size: 1.8em;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .close-modal-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: #ff0055;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
-
-        /* Dikdörtgen Fotoğraf Alanı */
-        .file-box {
-            width: 100%;
-            height: 140px;
-            border: 2px dashed #00ffcc;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #00ffcc;
-            transition: background 0.2s;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .file-box:hover {
-            background-color: rgba(0, 255, 204, 0.05);
-        }
-
-        /* Input alanları */
-        .input-field {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            background-color: #232836;
-            border: 1px solid #00ffcc;
-            color: #ffffff;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-
-        .input-field::placeholder { color: #5a6578; }
-        .input-field:focus { outline: none; box-shadow: 0 0 5px rgba(0, 255, 204, 0.5); }
-
-        .type-group {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 15px;
-            padding-left: 5px;
-        }
-
-        .type-group label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 1.1em;
-        }
-
-        .type-group input[type="radio"] {
-            accent-color: #00ffcc;
-            transform: scale(1.2);
-        }
-
-        .submit-btn {
-            background-color: #00ffcc;
-            color: #0d0f12;
-            border: none;
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        .submit-btn:hover {
-            background-color: #00e6b8;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
-        }
-
-        .btn-danger {
-            background-color: #ff0055;
-            color: white;
-            margin-top: 5px;
-        }
-
-        /* İlan Kartı Tasarımı */
-        .container {
-            max-width: 800px;
-            margin: 60px auto 30px;
-            padding: 0 20px;
-        }
-
-        .car-card {
-            background-color: #161920;
-            border: 1px solid #232836;
-            border-radius: 12px;
-            display: flex;
-            margin-bottom: 20px;
-            overflow: hidden;
-            transition: transform 0.2s, border-color 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .car-card.my-own-ad {
-            cursor: pointer;
-        }
-
-        .car-card.my-own-ad:hover {
-            transform: translateY(-3px);
-            border-color: #00ffcc;
-        }
-
-        .car-image {
-            width: 240px;
-            min-width: 240px;
-            height: 160px;
-            background-color: #232836;
-        }
-
-        .car-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .car-details {
-            padding: 20px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .car-title {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #ffffff;
-            margin: 0 0 10px 0;
-        }
-
-        .car-info-row {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            font-size: 0.9em;
-            color: #a0aec0;
-        }
-
-        .car-info-row span b {
-            color: #ffffff;
-        }
-
-        .social-highlight {
-            color: #ff0055 !important;
-            font-weight: 600;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.9em;
-            text-align: center;
-            align-self: flex-start;
-        }
-
-        .status-takas {
-            background-color: rgba(255, 152, 0, 0.15);
-            color: #ff9800;
-            border: 1px solid #ff9800;
-        }
-
-        .status-satilik {
-            background-color: rgba(0, 255, 204, 0.15);
-            color: #00ffcc;
-            border: 1px solid #00ffcc;
-        }
-
-        .price-tag {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #00ffcc;
-            text-shadow: 0 0 5px rgba(0, 255, 204, 0.3);
-        }
-
-        /* Mobil Tasarım Ayarı */
-        @media (max-width: 600px) {
-            .car-card { flex-direction: column; }
-            .car-image { width: 100%; height: 200px; }
-            header h1 { font-size: 2.2em; }
-            header h2 { font-size: 1.1em; }
-            .type-group { gap: 15px; }
-            .open-form-btn { right: 10px; padding: 8px 16px; font-size: 0.9em; bottom: -22px; }
-        }
+        body { background-color: #0d0f12; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        header { background: linear-gradient(135deg, #1a1c23 0%, #0d0f12 100%); padding: 30px 20px 40px 20px; text-align: center; border-bottom: 2px solid #00ffcc; box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2); position: relative; }
+        header h1 { margin: 0; font-size: 3em; letter-spacing: 3px; color: #00ffcc; text-shadow: 0 0 10px rgba(0, 255, 204, 0.6); }
+        header h2 { margin: 10px 0 0 0; font-size: 1.4em; color: #ff0055; font-weight: 600; text-shadow: 0 0 8px rgba(255, 0, 85, 0.5); }
+        .open-form-btn { position: absolute; right: 20px; bottom: -20px; background-color: #161920; color: #00ffcc; border: 2px solid #00ffcc; padding: 10px 20px; font-size: 1em; font-weight: bold; border-radius: 20px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4); transition: all 0.2s ease; z-index: 9999; }
+        .open-form-btn:hover { background-color: #00ffcc; color: #0d0f12; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; box-sizing: border-box; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .add-panel { background-color: #161920; border: 2px solid #00ffcc; border-radius: 15px; width: 100%; max-width: 450px; padding: 25px; box-shadow: 0 0 25px rgba(0, 255, 204, 0.2); position: relative; }
+        .close-modal-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #ff0055; font-size: 1.5em; cursor: pointer; }
+        .file-box { width: 100%; height: 140px; border: 2px dashed #00ffcc; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 15px; background-size: cover; background-position: center; }
+        .input-field { width: 100%; padding: 12px; margin-bottom: 12px; background-color: #232836; border: 1px solid #00ffcc; color: #ffffff; border-radius: 8px; box-sizing: border-box; }
+        .type-group { display: flex; gap: 30px; margin-bottom: 15px; }
+        .submit-btn { background-color: #00ffcc; color: #0d0f12; border: none; width: 100%; padding: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 5px; }
+        .btn-danger { background-color: #ff0055; color: white; }
+        .container { max-width: 800px; margin: 60px auto 30px; padding: 0 20px; }
+        .car-card { background-color: #161920; border: 1px solid #232836; border-radius: 12px; display: flex; margin-bottom: 20px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .car-image { width: 240px; min-width: 240px; height: 160px; background-color: #232836; }
+        .car-image img { width: 100%; height: 100%; object-fit: cover; }
+        .car-details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 0.9em; }
+        .status-takas { background-color: rgba(255, 152, 0, 0.15); color: #ff9800; border: 1px solid #ff9800; }
+        .status-satilik { background-color: rgba(0, 255, 204, 0.15); color: #00ffcc; border: 1px solid #00ffcc; }
+        @media (max-width: 600px) { .car-card { flex-direction: column; } .car-image { width: 100%; height: 200px; } }
     </style>
 </head>
 <body>
-
     <header>
         <h1>OTOBORSA</h1>
         <h2>CAR PARKING MULTIPLAYER SATILIK - TAKASLIK ARABALAR</h2>
@@ -341,25 +44,18 @@
         <div class="add-panel">
             <button class="close-modal-btn" onclick="closeModal('formModal')">✕</button>
             <h3>+ Yeni İlan Ekle</h3>
-            
             <label class="file-box" id="fileLabel" for="photoInput">
-                <span id="uploadText">📷 Fotoğraf Seç (Galeri / Dosyalar)</span>
+                <span id="uploadText">📷 Fotoğraf Seç</span>
                 <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewImage(this)">
             </label>
-
-            <input type="text" id="ownerNameInput" class="input-field" placeholder="Adınız Nedir? (Zorunlu)">
-            
-            <input type="text" id="socialInput" class="input-field" placeholder="Instagram veya TikTok Kullanıcı Adı (Zorunlu)">
-
-            <input type="text" id="carNameInput" class="input-field" placeholder="Araba Adı Ne Olsun? (Zorunlu)">
-
+            <input type="text" id="ownerNameInput" class="input-field" placeholder="Adınız">
+            <input type="text" id="socialInput" class="input-field" placeholder="Instagram/TikTok Adı">
+            <input type="text" id="carNameInput" class="input-field" placeholder="Araba Adı">
             <div class="type-group">
                 <label><input type="radio" name="carType" value="Takaslık" checked onclick="togglePriceField(false)"> Takaslık</label>
                 <label><input type="radio" name="carType" value="Satılık" onclick="togglePriceField(true)"> Satılık</label>
             </div>
-
-            <input type="number" id="priceInput" class="input-field" placeholder="Fiyat Yaz (En fazla 50.000.000 TL)" max="50000000" style="display: none;">
-
+            <input type="number" id="priceInput" class="input-field" placeholder="Fiyat (TL)" style="display: none;">
             <button class="submit-btn" onclick="addNewAd()">ONAYLA</button>
         </div>
     </div>
@@ -367,8 +63,7 @@
     <div class="modal-overlay" id="deleteModal" onclick="closeModalOutside(event, 'deleteModal')">
         <div class="add-panel" style="max-width: 400px; width:90%;">
             <button class="close-modal-btn" onclick="closeModal('deleteModal')">✕</button>
-            <h3 id="dtTitle" style="margin-bottom: 25px;">İlan Yönetimi</h3>
-            
+            <h3 id="dtTitle">İlan Yönetimi</h3>
             <button class="submit-btn btn-danger" onclick="deleteCurrentAd()">Bu İlanı Sil</button>
         </div>
     </div>
@@ -379,167 +74,65 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
-        const firebaseConfig = {
-            databaseURL: "https://comborse-76fee-default-rtdb.firebaseio.com/"
-        };
+        const firebaseConfig = { databaseURL: "https://comborse-76fee-default-rtdb.firebaseio.com/" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const adsRef = ref(db, 'ads');
 
-        // Tarayıcıya özel gizli kimlik (Kendi ilanını tanımak için)
         if (!localStorage.getItem('cpm_user_token')) {
             localStorage.setItem('cpm_user_token', 'user_' + Date.now() + Math.random().toString(36).substr(2, 5));
         }
         const MY_TOKEN = localStorage.getItem('cpm_user_token');
 
-        // Orijinal Hazır İlanlar (Veritabanı boşsa otomatik yüklenir)
-        const initialAds = [
-            { token: "system", owner: "Ahmet", social: "@ahmet_cpm", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
-            { token: "system", owner: "Mehmet", social: "@mehmet_v8", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
-            { token: "system", owner: "Can", social: "@can_kartal", title: "Krom Jant Kartal", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/2zzzaoi.jpg" },
-            { token: "system", owner: "Arda", social: "@arda_dodge", title: "Pikap Dodge Jeep", type: "Satılık", price: 1000000, img: "https://i.hizliresim.com/pum61p1.jpg" },
-            { token: "system", owner: "Efe", social: "@efe_i8", title: "Krom + Çizimli BMW i8", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/nwx796a.jpg" }
-        ];
-
-        // Global Değişkenler (Dışarıdan erişim için window'a bağlandı)
-        window.activeAdKey = null;
-        window.selectedImageBase64 = "";
-
-        // Canlı Veri Dinleme
         onValue(adsRef, (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('adContainer');
             container.innerHTML = "";
-
-            if (!data) {
-                initialAds.forEach(ad => push(adsRef, ad));
-                return;
-            }
-
-            Object.keys(data).reverse().forEach(key => {
-                const ad = data[key];
-                
-                let badgeHTML = ad.type === "Satılık" ? 
-                    `<div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
-                        <span class="status-badge status-satilik">Satılık</span>
-                        <span class="price-tag">${Number(ad.price).toLocaleString('tr-TR')} TL</span>
-                     </div>` : 
-                    `<span class="status-badge status-takas">Takaslık</span>`;
-
-                let isMyAd = ad.token === MY_TOKEN;
-                let clickAttr = isMyAd ? `onclick="openDeleteModal('${key}', '${ad.title.replace(/'/g, "\\'")}')"` : '';
-                let myAdClass = isMyAd ? 'my-own-ad' : '';
-
-                container.innerHTML += `
-                    <div class="car-card ${myAdClass}" ${clickAttr}>
-                        <div class="car-image">
-                            <img src="${ad.img}" alt="${ad.title}">
-                        </div>
-                        <div class="car-details">
-                            <div>
-                                <p class="car-title">${ad.title}</p>
-                                <div class="car-info-row">
-                                    <span>Sahibi: <b>${ad.owner}</b></span>
-                                    <span>İletişim: <b class="social-highlight">${ad.social}</b></span>
-                                    <span>Oyun: CPM</span>
-                                </div>
+            if (data) {
+                Object.keys(data).reverse().forEach(key => {
+                    const ad = data[key];
+                    let badge = ad.type === "Satılık" ? `<span class="status-badge status-satilik">Satılık: ${Number(ad.price).toLocaleString('tr-TR')} TL</span>` : `<span class="status-badge status-takas">Takaslık</span>`;
+                    let isMyAd = ad.token === MY_TOKEN;
+                    container.innerHTML += `
+                        <div class="car-card ${isMyAd ? 'my-own-ad' : ''}" ${isMyAd ? `onclick="openDeleteModal('${key}', '${ad.title.replace(/'/g, "\\'")}')"` : ''}>
+                            <div class="car-image"><img src="${ad.img}" alt="${ad.title}"></div>
+                            <div class="car-details">
+                                <div><p style="margin:0; font-size:1.3em; font-weight:bold;">${ad.title}</p>
+                                <p style="margin:5px 0; color:#a0aec0;">Sahibi: <b>${ad.owner}</b> | İletişim: <b>${ad.social}</b></p></div>
+                                ${badge}
                             </div>
-                            ${badgeHTML}
-                        </div>
-                    </div>
-                `;
-            });
-        });
-
-        // Tıklama Sorunu Çözülmüş İlan Ekleme Fonksiyonu
-        window.addNewAd = function() {
-            const ownerName = document.getElementById('ownerNameInput').value.trim();
-            const socialMedia = document.getElementById('socialInput').value.trim();
-            const carName = document.getElementById('carNameInput').value.trim();
-            const carType = document.querySelector('input[name="carType"]:checked').value;
-            const priceValue = document.getElementById('priceInput').value.trim();
-
-            if (!window.selectedImageBase64) { alert("Lütfen bir araba fotoğrafı ekleyin!"); return; }
-            if (ownerName === "") { alert("Lütfen adınızı yazın!"); return; }
-            if (socialMedia === "") { alert("Lütfen Instagram veya TikTok kullanıcı adınızı yazın!"); return; }
-            if (carName === "") { alert("Lütfen araba adını yazın!"); return; }
-            
-            if (carType === "Satılık") {
-                if (priceValue === "") { alert("Lütfen bir satış fiyatı girin!"); return; }
-                if (parseInt(priceValue) > 50000000) { alert("Fiyat sınırı aşıldı! En fazla 50.000.000 TL yazabilirsiniz."); return; }
-            }
-
-            push(adsRef, {
-                token: MY_TOKEN,
-                owner: ownerName,
-                social: socialMedia,
-                title: carName,
-                type: carType,
-                price: carType === "Satılık" ? parseInt(priceValue) : 0,
-                img: window.selectedImageBase64
-            }).then(() => {
-                closeModal('formModal');
-                document.getElementById('ownerNameInput').value = "";
-                document.getElementById('socialInput').value = "";
-                document.getElementById('carNameInput').value = "";
-                document.getElementById('priceInput').value = "";
-                document.getElementById('photoInput').value = "";
-                document.getElementById('fileLabel').style.backgroundImage = "none";
-                document.getElementById('uploadText').style.display = 'block';
-                window.selectedImageBase64 = "";
-                togglePriceField(false);
-                document.querySelector('input[name="carType"][value="Takaslık"]').checked = true;
-                alert("✅ İlanınız Canlı Pazara Eklendi!");
-            }).catch((err) => {
-                alert("Hata: " + err.message);
-            });
-        }
-
-        // İlan Silme Motoru
-        window.deleteCurrentAd = function() {
-            if (window.activeAdKey) {
-                const targetRef = ref(db, `ads/${window.activeAdKey}`);
-                remove(targetRef).then(() => {
-                    closeModal('deleteModal');
-                    alert("🗑️ İlan başarıyla canlı pazardan kaldırıldı.");
+                        </div>`;
                 });
             }
+        });
+
+        window.addNewAd = function() {
+            const owner = document.getElementById('ownerNameInput').value.trim();
+            const social = document.getElementById('socialInput').value.trim();
+            const title = document.getElementById('carNameInput').value.trim();
+            const type = document.querySelector('input[name="carType"]:checked').value;
+            const price = document.getElementById('priceInput').value.trim();
+            if (!window.selectedImageBase64 || !owner || !social || !title) { alert("Tüm alanları doldurun!"); return; }
+            push(adsRef, { token: MY_TOKEN, owner, social, title, type, price: type === "Satılık" ? parseInt(price) : 0, img: window.selectedImageBase64 }).then(() => {
+                alert("✅ İlan eklendi!"); closeModal('formModal');
+            });
+        }
+        window.deleteCurrentAd = function() {
+            if (window.activeAdKey) { remove(ref(db, `ads/${window.activeAdKey}`)).then(() => closeModal('deleteModal')); }
         }
     </script>
-
     <script>
         function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { 
-            document.getElementById(id).classList.remove('active'); 
-            if(id === 'deleteModal') window.activeAdKey = null;
-        }
-        function closeModalOutside(e, id) { if (e.target.id === id) { closeModal(id); } }
-
-        function togglePriceField(show) {
-            const priceInput = document.getElementById('priceInput');
-            priceInput.style.display = show ? 'block' : 'none';
-            if(!show) priceInput.value = '';
-        }
-
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function closeModalOutside(e, id) { if (e.target.id === id) closeModal(id); }
+        function togglePriceField(show) { document.getElementById('priceInput').style.display = show ? 'block' : 'none'; }
         function previewImage(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('fileLabel').style.backgroundImage = `url('${e.target.result}')`;
-                    document.getElementById('uploadText').style.display = 'none';
-                    window.selectedImageBase64 = e.target.result; 
-                }
-                reader.readAsDataURL(file);
-            }
+            const reader = new FileReader();
+            reader.onload = function(e) { window.selectedImageBase64 = e.target.result; document.getElementById('fileLabel').style.backgroundImage = `url('${e.target.result}')`; document.getElementById('uploadText').style.display = 'none'; }
+            reader.readAsDataURL(input.files[0]);
         }
-
-        function openDeleteModal(key, title) {
-            window.activeAdKey = key;
-            document.getElementById('dtTitle').innerText = title;
-            openModal('deleteModal');
-        }
+        function openDeleteModal(key, title) { window.activeAdKey = key; openModal('deleteModal'); document.getElementById('dtTitle').innerText = title; }
     </script>
 </body>
-    </html>
-    
+                </html>
+                
