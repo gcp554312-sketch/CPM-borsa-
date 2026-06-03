@@ -47,7 +47,7 @@
             text-shadow: 0 0 8px rgba(255, 0, 85, 0.5);
         }
 
-        /* Tıklama Sorunu Çözülmüş İlan Ekle Butonu */
+        /* İlan Ekle Butonu */
         .open-form-btn {
             position: absolute;
             right: 20px;
@@ -135,7 +135,7 @@
         /* Dikdörtgen Fotoğraf Alanı */
         .file-box {
             width: 100%;
-            height: 150px;
+            height: 140px;
             border: 2px dashed #00ffcc;
             border-radius: 10px;
             display: flex;
@@ -158,8 +158,8 @@
         /* Input alanları */
         .input-field {
             width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 12px;
             background-color: #232836;
             border: 1px solid #00ffcc;
             color: #ffffff;
@@ -168,7 +168,7 @@
             font-size: 1rem;
         }
 
-        .input-field::placeholder { color: #4a5568; }
+        .input-field::placeholder { color: #5a6578; }
         .input-field:focus { outline: none; box-shadow: 0 0 5px rgba(0, 255, 204, 0.5); }
 
         .type-group {
@@ -183,12 +183,12 @@
             align-items: center;
             gap: 10px;
             cursor: pointer;
-            font-size: 1.2em;
+            font-size: 1.1em;
         }
 
         .type-group input[type="radio"] {
             accent-color: #00ffcc;
-            transform: scale(1.3);
+            transform: scale(1.2);
         }
 
         .submit-btn {
@@ -204,6 +204,7 @@
             transition: background 0.2s, box-shadow 0.2s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-top: 5px;
         }
 
         .submit-btn:hover {
@@ -275,9 +276,19 @@
 
         .car-info-row {
             display: flex;
-            gap: 15px;
+            flex-direction: column;
+            gap: 5px;
             font-size: 0.9em;
             color: #a0aec0;
+        }
+
+        .car-info-row span b {
+            color: #ffffff;
+        }
+
+        .social-highlight {
+            color: #ff0055 !important;
+            font-weight: 600;
         }
 
         .status-badge {
@@ -329,7 +340,7 @@
         <button class="open-form-btn" onclick="openModal('formModal')">+ İlan Ekle</button>
     </header>
 
-    <!-- 1. MODAL: İLAN EKLEME PENCERESİ -->
+    <!-- 1. MODAL: İLAN EKLEME PENCERESİ (YENİ ALANLAR EKLENDİ) -->
     <div class="modal-overlay" id="formModal" onclick="closeModalOutside(event, 'formModal')">
         <div class="add-panel">
             <button class="close-modal-btn" onclick="closeModal('formModal')">✕</button>
@@ -340,7 +351,11 @@
                 <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewImage(this)">
             </label>
 
-            <input type="text" id="carNameInput" class="input-field" placeholder="Araba Adı Ne Olsun?">
+            <input type="text" id="ownerNameInput" class="input-field" placeholder="Adınız Nedir? (Zorunlu)">
+            
+            <input type="text" id="socialInput" class="input-field" placeholder="Instagram veya TikTok Kullanıcı Adı (Zorunlu)">
+
+            <input type="text" id="carNameInput" class="input-field" placeholder="Araba Adı Ne Olsun? (Zorunlu)">
 
             <div class="type-group">
                 <label><input type="radio" name="carType" value="Takaslık" checked onclick="togglePriceField(false)"> Takaslık</label>
@@ -367,16 +382,16 @@
     <div class="container" id="adContainer"></div>
 
     <script>
-        // Gizli sistem işareti (Arayüzde gözükmez)
-        const MY_SECRET_KEY = "mine";
+        // Arka planda silme yetkisini doğrulamak için kullanılan anahtar
+        const IS_MY_POST = "true";
 
-        // Orijinal İlanlar (Silinemez ve tıklanamaz)
+        // Orijinal Hazır İlanlar (Tıklanamaz ve silinemez olanlar)
         const initialAds = [
-            { id: 1, owner: "Ahmet", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
-            { id: 2, owner: "Ahmet", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
-            { id: 3, owner: "Ahmet", title: "Krom Jant Kartal", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/2zzzaoi.jpg" },
-            { id: 4, owner: "Ahmet", title: "Pikap Dodge Jeep", type: "Satılık", price: 1000000, img: "https://i.hizliresim.com/pum61p1.jpg" },
-            { id: 5, owner: "Ahmet", title: "Krom + Çizimli BMW i8", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/nwx796a.jpg" }
+            { id: 1, isMine: "false", owner: "Ahmet", social: "@ahmet_cpm", title: "Krom Jant Transit", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/8tiowo9.jpg" },
+            { id: 2, isMine: "false", owner: "Mehmet", social: "@mehmet_v8", title: "Karavan Sirenli", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/plb8pgp.jpg" },
+            { id: 3, isMine: "false", owner: "Can", social: "@can_kartal", title: "Krom Jant Kartal", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/2zzzaoi.jpg" },
+            { id: 4, isMine: "false", owner: "Arda", social: "@arda_dodge", title: "Pikap Dodge Jeep", type: "Satılık", price: 1000000, img: "https://i.hizliresim.com/pum61p1.jpg" },
+            { id: 5, isMine: "false", owner: "Efe", social: "@efe_i8", title: "Krom + Çizimli BMW i8", type: "Takaslık", price: 0, img: "https://i.hizliresim.com/nwx796a.jpg" }
         ];
 
         let ads = JSON.parse(localStorage.getItem('otoborsa_ads')) || [...initialAds];
@@ -387,7 +402,7 @@
             renderAds();
         };
 
-        // İlan Listesi Oluşturucu
+        // İlan Listesi Çizici
         function renderAds() {
             localStorage.setItem('otoborsa_ads', JSON.stringify(ads));
             const container = document.getElementById('adContainer');
@@ -401,8 +416,8 @@
                      </div>` : 
                     `<span class="status-badge status-takas">Takaslık</span>`;
 
-                // Sadece bizim eklediğimiz ilanlar tıklanabilir olur
-                let isMyAd = ad.owner === MY_SECRET_KEY;
+                // Sadece bizim eklediğimiz ilanlar tıklanabilir silme modunu tetikler
+                let isMyAd = ad.isMine === IS_MY_POST;
                 let clickAttr = isMyAd ? `onclick="openDeleteModal(${ad.id})"` : '';
                 let myAdClass = isMyAd ? 'my-own-ad' : '';
 
@@ -415,7 +430,8 @@
                             <div>
                                 <p class="car-title">${ad.title}</p>
                                 <div class="car-info-row">
-                                    <span>Sahibi: ${isMyAd ? "Ben" : ad.owner}</span>
+                                    <span>Sahibi: <b>${ad.owner}</b></span>
+                                    <span>İletişim: <b class="social-highlight">${ad.social}</b></span>
                                     <span>Oyun: CPM</span>
                                 </div>
                             </div>
@@ -452,14 +468,19 @@
             }
         }
 
-        // Yeni İlan Ekleme Motoru
+        // Yeni İlan Ekleme (Geliştirilmiş Doğrulama)
         function addNewAd() {
+            const ownerName = document.getElementById('ownerNameInput').value.trim();
+            const socialMedia = document.getElementById('socialInput').value.trim();
             const carName = document.getElementById('carNameInput').value.trim();
             const carType = document.querySelector('input[name="carType"]:checked').value;
             const priceValue = document.getElementById('priceInput').value.trim();
 
             if (!selectedImageBase64) { alert("Lütfen bir araba fotoğrafı ekleyin!"); return; }
+            if (ownerName === "") { alert("Lütfen adınızı yazın!"); return; }
+            if (socialMedia === "") { alert("Lütfen Instagram veya TikTok kullanıcı adınızı yazın!"); return; }
             if (carName === "") { alert("Lütfen araba adını yazın!"); return; }
+            
             if (carType === "Satılık") {
                 if (priceValue === "") { alert("Lütfen bir satış fiyatı girin!"); return; }
                 if (parseInt(priceValue) > 50000000) { alert("Fiyat sınırı aşıldı! En fazla 50.000.000 TL yazabilirsiniz."); return; }
@@ -467,7 +488,9 @@
 
             ads.unshift({
                 id: Date.now(),
-                owner: MY_SECRET_KEY, // Gizli anahtar atanır
+                isMine: IS_MY_POST, // Bizim eklediğimizi işaretler
+                owner: ownerName,
+                social: socialMedia,
                 title: carName,
                 type: carType,
                 price: carType === "Satılık" ? parseInt(priceValue) : 0,
@@ -477,6 +500,9 @@
             renderAds();
             closeModal('formModal');
 
+            // Form Alanlarını Temizleme
+            document.getElementById('ownerNameInput').value = "";
+            document.getElementById('socialInput').value = "";
             document.getElementById('carNameInput').value = "";
             document.getElementById('priceInput').value = "";
             document.getElementById('photoInput').value = "";
@@ -485,24 +511,24 @@
             selectedImageBase64 = "";
             togglePriceField(false);
             document.querySelector('input[name="carType"][value="Takaslık"]').checked = true;
-            alert("✅ Başarıyla Eklendi");
+            alert("✅ İlanınız Başarıyla Eklendi");
         }
 
-        // Silme Penceresini Açma
+        // Silme Penceresini Açma Kontrolü
         function openDeleteModal(id) {
             activeAdId = id;
             const ad = ads.find(a => a.id == id);
-            if(ad && ad.owner === MY_SECRET_KEY) {
+            if(ad && ad.isMine === IS_MY_POST) {
                 document.getElementById('dtTitle').innerText = ad.title;
                 openModal('deleteModal');
             }
         }
 
-        // Güvenli Silme Fonksiyonu
+        // Kendi İlanını Silme İşlemi
         function deleteCurrentAd() {
             const ad = ads.find(a => a.id == activeAdId);
 
-            if(!ad || ad.owner !== MY_SECRET_KEY) {
+            if(!ad || ad.isMine !== IS_MY_POST) {
                 alert("❌ Hata: Bu ilan size ait olmadığı için silemezsiniz!");
                 return;
             }
@@ -510,9 +536,9 @@
             ads = ads.filter(a => a.id !== activeAdId);
             renderAds();
             closeModal('deleteModal');
-            alert("🗑️ İlan kaldırıldı.");
+            alert("🗑️ İlan başarıyla kaldırıldı.");
         }
     </script>
 </body>
-                    </html>
-    
+            </html>
+                    
