@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTOBORSA - CPM Araç Pazarı</title>
+    <style>
+        /* Genel Sayfa Ayarları (Koyu Tema) */
+        body {
+            background-color: #0d0f12;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Üst Başlık Alanı (Header) */
+        header {
+            background: linear-gradient(135deg, #1a1c23 0%, #0d0f12 100%);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ffcc;
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3em;
+            letter-spacing: 3px;
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+        }
+
+        header h2 {
+            margin: 10px 0 0 0;
+            font-size: 1.4em;
+            color: #ff0055;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(255, 0, 85, 0.5);
+        }
+
+        /* İlan Listesi Konteyneri */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Sahibinden Tarzı Alt Alta Kart Yapısı */
+        .car-card {
+            background-color: #161920;
+            border: 1px solid #232836;
+            border-radius: 12px;
+            display: flex;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .car-card:hover {
+            transform: translateY(-3px);
+            border-color: #00ffcc;
+        }
+
+        /* Araba Fotoğraf Alanı */
+        .car-image {
+            width: 240px;
+            min-width: 240px;
+            height: 160px;
+            background-color: #232836;
+        }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* İlan Bilgileri Alanı */
+        .car-details {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .car-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0 0 10px 0;
+        }
+
+        .car-info-row {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #a0aec0;
+        }
+
+        /* Durum Etiketleri (Takaslık / Satılık) */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-align: center;
+            align-self: flex-start;
+        }
+
+        .status-takas {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: #ff9800;
+            border: 1px solid #ff9800;
+        }
+
+        .status-satilik {
+            background-color: rgba(0, 255, 204, 0.15);
+            color: #00ffcc;
+            border: 1px solid #00ffcc;
+        }
+
+        .price-tag {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #00ffcc;
+            text-shadow: 0 0 5px rgba(0, 255, 204, 0.3);
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 600px) {
+            .car-card {
+                flex-direction: column;
+            }
+            .car-image {
+                width: 100%;
+                height: 200px;
+            }
+            header h1 {
+                font-size: 2.2em;
+            }
+            header h2 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>OTOBORSA</h1>
+        <h2>CAR PARKING MULTIPLAYER SATILIK - TAKASLIK ARABALAR</h2>
+    </header>
+
+    <div class="container">
+
+        <div class="car-card">
+            <div class="car-image">
+                <img src="IMG_20260603_163931.jpg" alt="Krom jant transit">
+            </div>
+            <div class="car-details">
+                <div>
+                    <p class="car-title">Krom Jant Transit</p>
+                    <div class="car-info-row">
+                        <span>Sahibi: Ahmet</span>
+                        <span>Oyun: CPM</span>
+                    </div>
+                </div>
+                <span class="status-badge status-takas">Takaslık</span>
+            </div>
+        </div>
+
+        <div class="car-card">
+            <div class="car-image">
+                <img src="IMG_20260603_164039.jpg" alt="Karavan sirenli">
+            </div>
+            <div class="car-details">
+                <div>
+                    <p class="car-title">Karavan Sirenli</p>
+                    <div class="car-info-row">
+                        <span>Sahibi: Ahmet</span>
+                        <span>Oyun: CPM</span>
+                    </div>
+                </div>
+                <span class="status-badge status-takas">Takaslık</span>
+            </div>
+        </div>
+
+        <div class="car-card">
+            <div class="car-image">
+                <img src="IMG_20260603_164125.jpg" alt="Krom jant kartal">
+            </div>
+            <div class="car-details">
+                <div>
+                    <p class="car-title">Krom Jant Kartal</p>
+                    <div class="car-info-row">
+                        <span>Sahibi: Ahmet</span>
+                        <span>Oyun: CPM</span>
+                    </div>
+                </div>
+                <span class="status-badge status-takas">Takaslık</span>
+            </div>
+        </div>
+
+        <div class="car-card">
+            <div class="car-image">
+                <img src="IMG_20260603_163959.jpg" alt="Pikap Dodge jeep">
+            </div>
+            <div class="car-details">
+                <div>
+                    <p class="car-title">Pikap Dodge Jeep</p>
+                    <div class="car-info-row">
+                        <span>Sahibi: Ahmet</span>
+                        <span>Oyun: CPM</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
+                    <span class="status-badge status-satilik">Satılık</span>
+                    <span class="price-tag">10.000.000 TL</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="car-card">
+            <div class="car-image">
+                <img src="IMG_20260603_164102.jpg" alt="Krom + çizimli BMW i8">
+            </div>
+            <div class="car-details">
+                <div>
+                    <p class="car-title">Krom + Çizimli BMW i8</p>
+                    <div class="car-info-row">
+                        <span>Sahibi: Ahmet</span>
+                        <span>Oyun: CPM</span>
+                    </div>
+                </div>
+                <span class="status-badge status-takas">Takaslık</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
